@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>About Us</title>
+<link rel="icon" type="image/png" href="nam.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+/* ======= GENERAL RESET ======= */
+* {margin:0; padding:0; box-sizing:border-box; font-family:"Segoe UI", Arial, sans-serif;}
+body {background:#f4f7fa; color:#333;}
+a {text-decoration:none; color:inherit;}
+
+/* ======= NAVBAR ======= */
+.navbar{
+    background:#394b5d;
+    display:flex;
+    padding:0 20px;
+}
+.navbar > ul{
+    list-style:none;
+    display:flex;
+    margin:0;
+    padding:0;
+}
+.navbar ul li{
+    position:relative;
+}
+.navbar ul li a{
+    display:block;
+    padding:15px 20px;
+    color:#fff;
+    text-decoration:none;
+    transition:0.3s;
+}
+.navbar ul li a:hover{
+    background:#2a739280;
+}
+.dropdown{
+    display:none;
+    position:absolute;
+    top:100%;
+    left:0;
+    background:#49657f;
+    min-width:180px;
+    border-radius:6px;
+    box-shadow:0 8px 16px rgba(0,0,0,0.1);
+    z-index:999;
+}
+.dropdown a{
+    padding:12px 15px;
+    display:block;
+}
+.navbar ul li:hover .dropdown{
+    display:block;
+}
+
+/* ======= HERO ======= */
+.hero {
+    color: #fff;
+    text-align: center;
+    padding: 80px 20px 50px;
+    position: relative;
+    overflow: hidden;
+    background: url('pictures/B.jpg') center center / cover no-repeat; /* Static background image */
+}
+.hero h1 {font-size:36px; margin-bottom:10px; text-shadow:2px 3px 5px rgba(0,0,0,0.3);}
+.hero p {font-size:18px; max-width:700px; margin:auto; text-shadow:1px 2px 3px rgba(0,0,0,0.2);}
+
+/* ======= SECTIONS ======= */
+.section {
+    max-width:1100px;
+    margin: 50px auto;
+    background:#fff;
+    padding:40px 30px;
+    border-radius:20px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.1);
+}
+
+/* ======= FLEX CONTAINERS ======= */
+.flex {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:30px;
+}
+
+/* ======= PROFILE ======= */
+.profile img {
+    width:250px;
+    border-radius:20px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.2);
+    transition:0.3s;
+}
+.profile img:hover {transform:scale(1.05);}
+.profile-text {flex:1;}
+.profile-text h2 {font-size:28px; color:#1f2937; margin-bottom:15px;}
+.profile-text p {font-size:16px; line-height:1.6; color:#555;}
+
+/* ======= PROJECT DESCRIPTION ======= */
+.project-desc h2 {font-size:28px; color:#1f2937; margin-bottom:20px;}
+.project-desc p {font-size:16px; line-height:1.6; color:#555;}
+
+/* ======= MAP ======= */
+.map-container {
+    margin-top:30px;
+    width:100%;
+    height:400px;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* ======= CONTACT ======= */
+.contact {text-align:center;}
+.contact h2 {font-size:28px; color:#1f2937; margin-bottom:20px;}
+.contact a {display:inline-block; margin-top:10px; background:#394b5d; color:#fff; padding:12px 25px; border-radius:50px; box-shadow:0 10px 20px rgba(0,0,0,0.2); transition:0.3s;}
+.contact a:hover {background:#1f2937; transform:translateY(-3px);}
+
+/* ======= FOOTER ======= */
+footer {text-align:center; padding:30px 20px; font-size:14px; color:#777;}
+
+/* ======= RESPONSIVE ======= */
+@media(max-width:900px) {
+    .flex {flex-direction:column;}
+    .profile img {width:100%; max-width:300px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <ul>
+    <li><a href="home.html">Home</a></li>
+    <li>
+      <a href="#">Search by ▾</a>
+      <div class="dropdown">
+        <a href="subcontractor.html">Villa</a>
+        <a href="Sadayem.html">Villa / Subcontractor</a>
+      </div>
+    </li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="mailto:mrtanveer2017@gmail.com">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+    <h1>153 Villa Darat Sadayem</h1>
+    <p>Comprehensive Villa Project Documentation & Coordination by Eng. Tanveer Ahmad</p>
+</div>
+
+<!-- PROFILE SECTION -->
+<div class="section flex profile">
+    <img src="mypic2.jpeg" alt="Eng. Tanveer Ahmad">
+    <div class="profile-text">
+        <h2>Eng. Tanveer Ahmad</h2>
+        <p>Detail-oriented and organized Project Coordinator / Document Controller with a background in Software Engineering and over 6 years of professional experience in construction and project documentation — including 5 years in Pakistan and 1 year in Saudi Arabia. Skilled in managing, reviewing, and controlling project documents, invoices, and reports while ensuring compliance and coordination with consultants and management teams. Dedicated to maintaining accuracy, efficiency, and consistency in all project documentation processes.</p>
+        <p>Email: <a href="mailto:mrtanveer2017@gmail.com">mrtanveer2017@gmail.com</a></p>
+    </div>
+</div>
+
+<!-- PROJECT DESCRIPTION -->
+<div class="section project-desc">
+    <h2>About This Project</h2>
+    <p>The <strong>153 Villa Darat Sadayem</strong> project involved the complete coordination and documentation of all villas under construction. This included tracking the progress of multiple types of work, ensuring timely updates, contractor coordination, and maintaining comprehensive reports for management. Our advanced tracking system allows for real-time visibility of villa work status and facilitates seamless communication between stakeholders.</p>
+</div>
+
+<!-- GOOGLE MAP -->
+<div class="section">
+    <h2>Project Location</h2>
+    <div class="map-container">
+        <iframe class="embed-map-frame"
+        src="https://maps.google.com/maps?width=600&height=400&hl=en&q=21%C2%B029%2714.3%22N%2039%C2%B010%2752.8%22E&t=&z=16&ie=UTF8&iwloc=B&output=embed"
+        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
+        </iframe>
+    </div>
+</div>
+
+<!-- CONTACT SECTION -->
+<div class="section contact">
+    <h2>Get in Touch</h2>
+    <a href="mailto:mrtanveer2017@gmail.com">Contact Me</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    &copy; 2026 Eng. Tanveer Ahmad | All Rights Reserved
+</footer>
+<a href="https://wa.me/+966504717535" target="_blank" 
+   style="
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25D366;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      z-index: 1000;
+      text-decoration: none;
+   " 
+   aria-label="Chat on WhatsApp"
+   title="Chat with us on WhatsApp">
+   <img src="whatsapp.png" alt="WhatsApp" style="width: 32px; height: 32px;">
+</a>
+</body>
+</html>
