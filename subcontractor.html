@@ -199,10 +199,67 @@
         object-fit: cover;
         box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
+    /* ================= SECURITY ================= */
+#securityOverlay{
+ position:fixed;inset:0;
+ background:rgba(0,0,0,.6);
+ backdrop-filter:blur(8px);
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ z-index:99999;
+}
+.security-box{
+ background:#fff;
+ padding:30px;
+ width:360px;
+ border-radius:18px;
+ text-align:center;
+ box-shadow:0 30px 60px rgba(0,0,0,.35);
+}
+.security-box input{
+ width:100%;
+ padding:12px;
+ margin:8px 0;
+ border-radius:30px;
+ border:1px solid #ccc;
+}
+.security-box button{
+ width:100%;
+ padding:12px;
+ border:none;
+ border-radius:30px;
+ background:linear-gradient(135deg,#007bff,#0056b3);
+ color:#fff;
+}
+#secError{color:#d00000;margin-top:8px}
+
+/* ================= PRINT ================= */
+@media print{
+ .navbar{display:none!important}
+ @page{size:A4;margin:15mm}
+}
+
+/* ================= MOBILE ================= */
+@media(max-width:768px){
+ .navbar ul{flex-direction:column}
+ footer{flex-direction:column;text-align:center}
+}
 </style>
 </head>
 
 <body>
+    <!-- SECURITY -->
+<div id="securityOverlay">
+ <div class="security-box">
+  <h2>Welcome to Namarabia Database</h2>
+  <p>Please login to continue</p>
+  <input id="secUser" placeholder="Username">
+  <input id="secPass" type="password" placeholder="Password">
+  <button onclick="securityLogin()">Login</button>
+  <div id="secError"></div>
+ </div>
+</div>
 <img src="nam.png" alt="Company Logo">
 
 <nav class="navbar">
@@ -212,9 +269,8 @@
     <li>
       <a href="#">Search by ▾</a>
       <div class="dropdown">
-        <a href="Sadayem.html">Villa Number</a>
-        <a href="worktype.html">Work Type</a>
-        <a href="subcontractor.html">Sub-Contractor</a>
+        <a href="subcontractor.html">Villa</a>
+        <a href="Sadayem.html">Villa / Subcontractor</a>
       </div>
     </li>
 
@@ -225,7 +281,7 @@
 
 <div class="container">
     <div class="header">
-        <h2>Search by Subcontractor</h2>
+        <h2>Search by Only Villa Number</h2>
         <div></div>
     </div>
 
@@ -262,6 +318,13 @@
 </div>
 
 <script>
+    const SEC_USER="admin",SEC_PASS="12345";
+function securityLogin(){
+ if(secUser.value===SEC_USER && secPass.value===SEC_PASS)
+  securityOverlay.style.display="none";
+ else secError.innerText="Invalid login";
+}
+
 let csvRows = [];
 
 fetch("plaster_work.csv")

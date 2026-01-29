@@ -4,323 +4,434 @@
 <meta charset="UTF-8">
 <title>Villa Work Status</title>
 
-<!-- TAB ICON -->
 <link rel="icon" type="image/png" href="sadayem.png">
 
 <style>
-    body {
-        font-family: "Segoe UI", Arial, sans-serif;
-        background: linear-gradient(135deg, #eef2f7, #dbe3ec);
-        padding: 30px;
-        margin: 0;
-        animation: fadeIn 0.6s ease-in;
-    }
-/* Navbar */
+/* ================= BASE ================= */
+body{
+ font-family:"Segoe UI",Arial,sans-serif;
+ background:linear-gradient(135deg,#eef2f7,#dbe3ec);
+ margin:0;padding:30px;
+}
+img{height:70px}
+
+/* ================= NAVBAR (UNCHANGED) ================= */
 .navbar{
-  background:#394b5d;
-  display:flex;
-  padding:0 20px;
+ background:#394b5d;
+ display:flex;
+ padding:0 20px;
 }
-
-/* Main menu items */
-.navbar > ul{
-  list-style:none;
-  display:flex;
-}
-
-.navbar ul li{
-  position:relative; /* IMPORTANT */
-}
-
+.navbar ul{list-style:none;display:flex;margin:0;padding:0}
+.navbar ul li{position:relative}
 .navbar ul li a{
-  display:block;
-  padding:15px 20px;
-  color:#fff;
-  text-decoration:none;
-  transition:0.3s;
+ display:block;
+ padding:15px 20px;
+ color:#fff;
+ text-decoration:none;
 }
-
-.navbar ul li a:hover{
-  background:#2a739280;
-}
-
-/* Dropdown menu */
+.navbar ul li a:hover{background:#2a739280}
 .dropdown{
-  display:none;
-  position:absolute;
-  top:100%;
-  left:0;
-  background:#49657f;
-  min-width:180px;
-  border-radius:6px;
-  box-shadow:0 8px 16px rgba(0,0,0,0.1);
-  z-index:999;
+ display:none;
+ position:absolute;
+ top:100%;left:0;
+ background:#49657f;
+ min-width:180px;
+ border-radius:6px;
+ box-shadow:0 8px 16px rgba(0,0,0,.1);
+ z-index:999;
+}
+.dropdown a{display:block;padding:12px 15px}
+.navbar ul li:hover .dropdown{display:block}
+
+/* ================= CONTAINER ================= */
+.container{
+ max-width:1100px;
+ margin:auto;
+ background:#fff;
+ border-radius:16px;
+ box-shadow:0 20px 40px rgba(0,0,0,.12);
+ padding:25px 30px 35px;
 }
 
-.dropdown a{
-  padding:12px 15px;
-  display:block;
+/* ================= HEADER ================= */
+h2{
+ text-align:center;
+ color:#fff;
+ background:#1f2937;
+ padding:10px;
+ border-radius:10px;
 }
 
-/* SHOW dropdown on hover */
-.navbar ul li:hover .dropdown{
-  display:block;
+/* ================= SEARCH ================= */
+.form-box{
+ display:flex;
+ justify-content:center;
+ gap:10px;
+ margin:20px 0;
+ flex-wrap:wrap;
 }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+.form-box input,select{
+ padding:12px 15px;
+ border-radius:30px;
+ border:1px solid #ccc;
+}
+.form-box button{
+ padding:12px 22px;
+ border-radius:30px;
+ border:none;
+ cursor:pointer;
+ background:linear-gradient(135deg,#007bff,#0056b3);
+ color:#fff;
+}
 
-    .container {
-        max-width: 1100px;
-        margin: auto;
-        background: #fff;
-        border-radius: 16px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-        padding: 25px 30px 35px;
-    }
+/* ================= FILTER ================= */
+.advanced-filter{
+ display:flex;
+ flex-wrap:wrap;
+ gap:15px;
+ justify-content:center;
+ margin:20px 0;
+}
+.advanced-filter label{
+ background:#f1f5f9;
+ padding:8px 14px;
+ border-radius:20px;
+ cursor:pointer;
+}
 
-    .header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 25px;
-    }
+/* ================= TABLE ================= */
+table{
+ width:100%;
+ border-collapse:collapse;
+ margin-top:20px;
+}
+th,td{padding:12px;text-align:center}
+th{background:#1f2937;color:#fff}
+tr:nth-child(even){background:#f7f9fc}
 
-    body,img {
-        height: 70px;
-    }
+/* ================= FOOTER ================= */
+footer{
+ margin-top:30px;
+ padding-top:20px;
+ border-top:1px solid #ddd;
+ display:flex;
+ justify-content:space-between;
+ flex-wrap:wrap;
+ gap:10px;
+}
+.prepared{display:flex;align-items:center;gap:10px}
+.prepared img{
+ width:48px;height:48px;border-radius:50%;
+}
 
-    h2 {
-        text-align: center;
-        margin: 0;
-        text-shadow: 1px 2px 3px #000000;
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        color: #f2f0f0;
-        font-size: 26px;
-    }
+/* ================= SECURITY ================= */
+#securityOverlay{
+ position:fixed;inset:0;
+ background:rgba(0,0,0,.6);
+ backdrop-filter:blur(8px);
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ z-index:99999;
+}
+.security-box{
+ background:#fff;
+ padding:30px;
+ width:360px;
+ border-radius:18px;
+ text-align:center;
+ box-shadow:0 30px 60px rgba(0,0,0,.35);
+}
+.security-box input{
+ width:100%;
+ padding:12px;
+ margin:8px 0;
+ border-radius:30px;
+ border:1px solid #ccc;
+}
+.security-box button{
+ width:100%;
+ padding:12px;
+ border:none;
+ border-radius:30px;
+ background:linear-gradient(135deg,#007bff,#0056b3);
+ color:#fff;
+}
+#secError{color:#d00000;margin-top:8px}
 
-    .form-box {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin: 25px 0;
-    }
+/* ================= PRINT ================= */
+@media print{
+ .navbar{display:none!important}
+ @page{size:A4;margin:15mm}
+}
 
-    .form-box input {
-        padding: 12px 15px;
-        width: 220px;
-        font-size: 16px;
-        border-radius: 30px;
-        border: 1px solid #ccc;
-        outline: none;
-        transition: 0.3s;
-        box-shadow: inset 0 2px 6px rgba(0,0,0,0.08);
-    }
-
-    .form-box input:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 0 3px rgba(0,123,255,0.2);
-    }
-
-    .form-box button {
-        padding: 12px 22px;
-        font-size: 16px;
-        border-radius: 30px;
-        border: none;
-        cursor: pointer;
-        background: linear-gradient(135deg, #007bff, #0056b3);
-        color: #fff;
-        box-shadow: 0 8px 18px rgba(0,123,255,0.35);
-        transition: 0.3s;
-    }
-
-    .form-box button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 25px rgba(0,123,255,0.45);
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 25px;
-        border-radius: 12px;
-        overflow: hidden;
-        animation: fadeIn 0.4s ease-in;
-    }
-
-    th, td {
-        padding: 12px;
-        text-align: center;
-    }
-
-    th {
-        background: #1f2937;
-        color: #fff;
-        font-weight: 600;
-    }
-
-    tr:nth-child(even) {
-        background: #f7f9fc;
-    }
-
-    tr:hover {
-        background: #eef4ff;
-    }
-
-    .no-data {
-        text-align: center;
-        margin-top: 20px;
-        color: #d00000;
-        font-weight: bold;
-    }
-
-    footer {
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid #ddd;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 14px;
-        color: #555;
-    }
-
-    .prepared {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .prepared img {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        object-fit: cover;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
+/* ================= MOBILE ================= */
+@media(max-width:768px){
+ .navbar ul{flex-direction:column}
+ footer{flex-direction:column;text-align:center}
+}
 </style>
 </head>
 
 <body>
-<img src="nam.png" alt="Company Logo">
+
+<!-- SECURITY -->
+<div id="securityOverlay">
+ <div class="security-box">
+  <h2>Welcome to Namarabia Database</h2>
+  <p>Please login to continue</p>
+  <input id="secUser" placeholder="Username">
+  <input id="secPass" type="password" placeholder="Password">
+  <button onclick="securityLogin()">Login</button>
+  <div id="secError"></div>
+ </div>
+</div>
+
+<img src="nam.png">
 
 <nav class="navbar">
-  <ul>
-    <li><a href="Sadayem.html">Home</a></li>
-
-    <li>
-      <a href="#">Search by ▾</a>
-      <div class="dropdown">
-        <a href="Sadayem.html">Villa Number</a>
-        <a href="worktype.html">Work Type</a>
-        <a href="subcontractor.html">Sub-Contractor</a>
-      </div>
-    </li>
-
-    <li><a href="#">About</a></li>
-    <li><a href="https://namarabia.com/">Contact</a></li>
-  </ul>
+<ul>
+ <li><a href="Sadayem.html">Home</a></li>
+ <li>
+  <a href="#">Search by ▾</a>
+  <div class="dropdown">
+   <a href="subcontractor.html">Villa</a>
+   <a href="Sadayem.html">Villa / Contractor</a>
+  </div>
+ </li>
+ <li><a href="#">About</a></li>
+ <li><a href="https://namarabia.com/">Contact</a></li>
+</ul>
 </nav>
 
 <div class="container">
-    <div class="header">
-        <h2>Search by Villa</h2>
-        <div></div>
-    </div>
 
-    <div class="form-box">
-        <input type="number" id="villaInput" placeholder="Enter Villa No">
-        <button onclick="searchVilla()">Search</button>
-    </div>
+<h2>Search by Villa / Contractor</h2>
+<div id="summaryBar" style="
+ display:none;
+ background:#f1f5f9;
+ padding:12px 20px;
+ border-radius:12px;
+ margin-bottom:15px;
+ display:flex;
+ gap:20px;
+ justify-content:space-around;
+ font-weight:600;">
+</div>
 
-    <table id="resultTable" style="display:none;">
-        <thead>
-            <tr>
-                <th>Villa No</th>
-                <th>Work Type</th>
-                <th>Percentage</th>
-                <th>Contractor</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-    </table>
+<div class="form-box">
+ <input type="number" id="villaInput" placeholder="Villa No">
+ <select id="contractorSelect">
+  <option value="">Select Contractor</option>
+ </select>
+ <button onclick="searchData()">Search</button>
+</div>
 
-    <div id="noData" class="no-data"></div>
+<div class="advanced-filter">
+ <label><input type="checkbox" class="fWork" value="Plaster"> Plaster</label>
+ <label><input type="checkbox" class="fWork" value="Paint"> Paint</label>
+ <label><input type="checkbox" class="fStatus" value="Open"> Open</label>
+ <label><input type="checkbox" class="fStatus" value="Closed"> Closed</label>
+ <label><input type="checkbox" class="fStatus" value="Retained"> Retained</label>
+</div>
 
-    <footer>
-        <div>© 2026 Eng. Tanveer Ahmad</div>
-        <div>Contact us : mrtanveer2017@gmail.com</div>
-        <div class="prepared">
-            <span>Prepared by</span>
-            <img src="mypic.png" alt="Eng. Tanveer Ahmad">
-        </div>
-    </footer>
+<table id="resultTable" style="display:none">
+<thead>
+<tr>
+ <th>Villa</th><th>Work</th><th>%</th><th>Contractor</th><th>Status</th>
+</tr>
+</thead>
+<tbody id="tableBody"></tbody>
+</table>
+
+<footer>
+ <div>© 2026 Eng. Tanveer Ahmad</div>
+ <div>Contact: mrtanveer2017@gmail.com</div>
+ <div class="prepared">
+  <span>Prepared by</span>
+  <img src="mypic.png">
+ </div>
+</footer>
 
 </div>
 
 <script>
-let csvRows = [];
+const SEC_USER="admin",SEC_PASS="12345";
+function securityLogin(){
+ if(secUser.value===SEC_USER && secPass.value===SEC_PASS)
+  securityOverlay.style.display="none";
+ else secError.innerText="Invalid login";
+}
 
-fetch("plaster_work.csv")
-    .then(res => res.text())
-    .then(text => {
-        csvRows = text.trim().split("\n").map(r => r.split(","));
-    });
-
-// 🔑 ENTER KEY SUPPORT
-document.getElementById("villaInput").addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-        searchVilla();
-    }
+let csvRows=[],results=[];
+fetch("plaster_work.csv").then(r=>r.text()).then(t=>{
+ csvRows=t.trim().split("\n").map(r=>r.split(","));
+ loadContractors();
 });
 
-function searchVilla() {
-    const villaNo = document.getElementById("villaInput").value.trim();
-    const tbody = document.getElementById("tableBody");
-    const table = document.getElementById("resultTable");
-    const noData = document.getElementById("noData");
-
-    tbody.innerHTML = "";
-    noData.innerHTML = "";
-
-    const row = csvRows.slice(1).find(r =>
-        r[2] && r[2].trim().replace(/^0+/, "") === villaNo.replace(/^0+/, "")
-    );
-
-    if (!row) {
-        table.style.display = "none";
-        noData.innerHTML = "No data found for Villa " + villaNo;
-        return;
-    }
-
-    let foundAny = false;
-
-    for (let col = 4; col < row.length; col += 5) {
-        const workType   = row[col]?.trim();
-        const percentage = row[col + 1]?.trim();
-        const status     = row[col + 2]?.trim();
-        const contractor = row[col + 3]?.trim();
-
-        if (!workType && !percentage && !status && !contractor) continue;
-
-        foundAny = true;
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${row[2]}</td>
-            <td>${workType || "-"}</td>
-            <td>${percentage || "-"}</td>
-            <td>${contractor || "-"}</td>
-            <td>${status || "-"}</td>
-        `;
-        tbody.appendChild(tr);
-    }
-
-    table.style.display = foundAny ? "table" : "none";
+function loadContractors(){
+ const map=new Map();
+ csvRows.slice(1).forEach(r=>{
+  for(let c=4;c<r.length;c+=5){
+   let con=r[c+3];
+   if(!con)continue;
+   con=con.trim();
+   const key=con.toLowerCase();
+   if(!map.has(key))map.set(key,con);
+  }
+ });
+ map.forEach(v=>{
+  contractorSelect.add(new Option(v,v));
+ });
 }
+
+function searchData(){
+  results = [];
+  tableBody.innerHTML = "";
+
+  const villa = villaInput.value.trim().replace(/^0+/,"");
+  const selectedContractor = contractorSelect.value.trim().toLowerCase();
+
+  const fWork = [...document.querySelectorAll(".fWork:checked")]
+                .map(e => e.value.toLowerCase());
+  const fStatus = [...document.querySelectorAll(".fStatus:checked")]
+                  .map(e => e.value.toLowerCase());
+
+  csvRows.slice(1).forEach(row => {
+
+    const rowVilla = row[2]?.trim().replace(/^0+/,"");
+    if(villa && rowVilla !== villa) return;
+
+    for(let c = 4; c < row.length; c += 5){
+
+      const work = row[c]?.trim();
+      const percent = row[c+1]?.trim();
+      const status = row[c+2]?.trim();
+      const contractor = row[c+3]?.trim();
+
+      // Skip empty records
+      if(!work && !status && !contractor) continue;
+
+      // Contractor filter (FIXED)
+      if(
+        selectedContractor &&
+        contractor?.toLowerCase() !== selectedContractor
+      ) continue;
+
+      // Work filter
+      if(
+        fWork.length &&
+        !fWork.includes(work?.toLowerCase())
+      ) continue;
+
+      // Status filter (FIXED: allow ALL matching)
+      if(
+        fStatus.length &&
+        !fStatus.includes(status?.toLowerCase())
+      ) continue;
+
+      results.push({
+        villa: rowVilla,
+        work,
+        percent,
+        contractor,
+        status
+      });
+    }
+  });
+
+  renderResults();
+}
+function renderResults(){
+  if(!results.length){
+    resultTable.style.display="none";
+    summaryBar.style.display="none";
+    return;
+  }
+
+  resultTable.style.display="table";
+  summaryBar.style.display="flex";
+
+  let open=0, closed=0, retained=0;
+  const villaSet = new Set();
+
+  results.forEach(r=>{
+    villaSet.add(r.villa);
+
+    if(r.status?.toLowerCase()==="open") open++;
+    if(r.status?.toLowerCase()==="closed") closed++;
+    if(r.status?.toLowerCase()==="retained") retained++;
+
+    tableBody.innerHTML += `
+      <tr>
+        <td>${r.villa}</td>
+        <td>${r.work || "-"}</td>
+        <td>${r.percent || "-"}</td>
+        <td>${r.contractor || "-"}</td>
+        <td>${r.status || "-"}</td>
+      </tr>
+    `;
+  });
+
+  summaryBar.innerHTML = `
+    <div>Total Villas: ${villaSet.size}</div>
+    <div>Open: ${open}</div>
+    <div>Closed: ${closed}</div>
+    <div>Retained: ${retained}</div>
+  `;
+}
+
+function render(){
+ if(!results.length){resultTable.style.display="none";return;}
+ resultTable.style.display="table";
+ results.forEach(o=>{
+  tableBody.innerHTML+=`
+   <tr>
+    <td>${o.villa}</td>
+    <td>${o.work}</td>
+    <td>${o.percent}</td>
+    <td>${o.contractor}</td>
+    <td>${o.status}</td>
+   </tr>`;
+ });
+}
+
 </script>
 
 </body>
+<script>
+window.addEventListener("load", function () {
+
+  /* ========== ENTER KEY SEARCH ========== */
+  const villaInput = document.getElementById("villaInput");
+  if (villaInput) {
+    villaInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        searchData();
+      }
+    });
+  }
+
+  /* ========== PAINT / PLASTER COMING SOON ========== */
+  const originalSearchData = searchData;
+
+  window.searchData = function () {
+
+    const works = [...document.querySelectorAll(".fWork:checked")]
+      .map(w => w.value.toLowerCase());
+
+    // If Paint OR Plaster OR both selected
+    if (works.includes("paint") || works.includes("plaster")) {
+      alert("🚧 Paint & Plaster Filter Function is Coming Soon");
+      return;
+    }
+
+    originalSearchData();
+  };
+
+});
+</script>
+
+
 </html>
