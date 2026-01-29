@@ -13,9 +13,9 @@ body{
  background:linear-gradient(135deg,#eef2f7,#dbe3ec);
  margin:0;padding:30px;
 }
-img{height:70px}
+img{height:90px}
 
-/* ================= NAVBAR (UNCHANGED) ================= */
+/* ================= NAVBAR ================= */
 .navbar{
  background:#394b5d;
  display:flex;
@@ -59,7 +59,7 @@ h2{
  color:#fff;
  background:#1f2937;
  padding:10px;
- border-radius:10px;
+ border-radius:50px;
 }
 
 /* ================= SEARCH ================= */
@@ -71,7 +71,7 @@ h2{
  flex-wrap:wrap;
 }
 .form-box input,select{
- padding:12px 15px;
+ padding:10px 15px;
  border-radius:30px;
  border:1px solid #ccc;
 }
@@ -84,12 +84,46 @@ h2{
  color:#fff;
 }
 
+/* ===== INPUT ROW ===== */
+.input-row{
+ display:flex;
+ gap:10px;
+ width:100%;
+ justify-content:center;
+}
+
+/* ===== VILLA DROPDOWN ===== */
+.villa-wrapper{
+ position:relative;
+ width:40%;
+}
+.villa-list{
+ position:absolute;
+ top:110%;
+ left:0;
+ right:0;
+ max-height:80px;
+ overflow-y:auto;
+ background:#ffffff;
+ border-radius:14px;
+ box-shadow:0 10px 25px rgba(0,0,0,.18);
+ display:none;
+ z-index:1000;
+}
+.villa-item{
+ padding:10px 14px;
+ cursor:pointer;
+ font-weight:500;
+}
+.villa-item:hover{
+ background:#f1f5f9;
+}
+
 /* ================= FILTER ================= */
 .advanced-filter{
  display:flex;
  flex-wrap:wrap;
- gap:15px;
- justify-content:center;
+ gap:10px;
  margin:20px 0;
 }
 .advanced-filter label{
@@ -103,11 +137,11 @@ h2{
 table{
  width:100%;
  border-collapse:collapse;
- margin-top:20px;
+ margin-top:10px;
 }
 th,td{padding:12px;text-align:center}
 th{background:#1f2937;color:#fff}
-tr:nth-child(even){background:#f7f9fc}
+tr:nth-child(even){background:#f6f8fa}
 
 /* ================= FOOTER ================= */
 footer{
@@ -124,7 +158,14 @@ footer{
  width:48px;height:48px;border-radius:50%;
 }
 
-/* ================= SECURITY ================= */
+/* ================= RESPONSIVE ================= */
+@media(max-width:900px){
+ .input-row input,
+ .input-row select{
+  width:50%;
+ }
+}
+ /* ================= SECURITY ================= */
 #securityOverlay{
  position:fixed;inset:0;
  background:rgba(0,0,0,.6);
@@ -159,31 +200,21 @@ footer{
 }
 #secError{color:#d00000;margin-top:8px}
 
-/* ================= PRINT ================= */
-@media print{
- .navbar{display:none!important}
- @page{size:A4;margin:15mm}
-}
-
-/* ================= MOBILE ================= */
-@media(max-width:768px){
- .navbar ul{flex-direction:column}
- footer{flex-direction:column;text-align:center}
-}
 </style>
 </head>
 
 <body>
-
 <!-- SECURITY -->
+
 <div id="securityOverlay">
  <div class="security-box">
-  <h2>Welcome to Namarabia Database</h2>
+  <h2>Welcome to Sadayem Database</h2>
   <p>Please login to continue</p>
   <input id="secUser" placeholder="Username">
   <input id="secPass" type="password" placeholder="Password">
   <button onclick="securityLogin()">Login</button>
   <div id="secError"></div>
+  <br>Designed by: Eng.Tanveer Ahmad
  </div>
 </div>
 
@@ -207,6 +238,7 @@ footer{
 <div class="container">
 
 <h2>Search by Villa / Contractor</h2>
+
 <div id="summaryBar" style="
  display:none;
  background:#f1f5f9;
@@ -220,10 +252,21 @@ footer{
 </div>
 
 <div class="form-box">
- <input type="number" id="villaInput" placeholder="Villa No">
- <select id="contractorSelect">
-  <option value="">Select Contractor</option>
- </select>
+
+ <div class="input-row">
+
+  <!-- ===== VILLA INPUT WITH DROPDOWN ===== -->
+  <div class="villa-wrapper">
+    <input type="number" id="villaInput" placeholder="Villa No" autocomplete="off">
+    <div id="villaList" class="villa-list"></div>
+  </div>
+
+  <select id="contractorSelect">
+    <option value="">Select Contractor</option>
+  </select>
+
+ </div>
+
  <button onclick="searchData()">Search</button>
 </div>
 
@@ -255,20 +298,17 @@ footer{
 
 </div>
 
+<!-- ================= JS ================= -->
 <script>
-const SEC_USER="admin",SEC_PASS="12345";
-function securityLogin(){
- if(secUser.value===SEC_USER && secPass.value===SEC_PASS)
-  securityOverlay.style.display="none";
- else secError.innerText="Invalid login";
-}
+let csvRows=[],results=[],villaNumbers=[];
 
-let csvRows=[],results=[];
-fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQINyDgvZfeKrtOQ8Zr7hmiuTzJUjXHhZ7Ie12JmAKnd3pQORG_w-oYh-sRCJx6qegmTyIYqr4Lzoho/pub?gid=1103723857&single=true&output=csv").then(r=>r.text()).then(t=>{
+fetch("plaster_work.csv").then(r=>r.text()).then(t=>{
  csvRows=t.trim().split("\n").map(r=>r.split(","));
  loadContractors();
+ loadVillas();
 });
 
+/* ===== LOAD CONTRACTORS ===== */
 function loadContractors(){
  const map=new Map();
  csvRows.slice(1).forEach(r=>{
@@ -285,173 +325,148 @@ function loadContractors(){
  });
 }
 
+/* ===== LOAD VILLAS ===== */
+function loadVillas(){
+ const set=new Set();
+ csvRows.slice(1).forEach(r=>{
+  const v=r[2]?.trim().replace(/^0+/,"");
+  if(v)set.add(v);
+ });
+ villaNumbers=[...set].sort((a,b)=>a-b);
+}
+
+/* ===== SEARCH ===== */
 function searchData(){
-  results = [];
-  tableBody.innerHTML = "";
+ results=[];
+ tableBody.innerHTML="";
 
-  const villa = villaInput.value.trim().replace(/^0+/,"");
-  const selectedContractor = contractorSelect.value.trim().toLowerCase();
+ const villa=villaInput.value.trim().replace(/^0+/,"");
+ const selectedContractor=contractorSelect.value.trim().toLowerCase();
 
-  const fWork = [...document.querySelectorAll(".fWork:checked")]
-                .map(e => e.value.toLowerCase());
-  const fStatus = [...document.querySelectorAll(".fStatus:checked")]
-                  .map(e => e.value.toLowerCase());
+ const fWork=[...document.querySelectorAll(".fWork:checked")].map(e=>e.value.toLowerCase());
+ const fStatus=[...document.querySelectorAll(".fStatus:checked")].map(e=>e.value.toLowerCase());
 
-  csvRows.slice(1).forEach(row => {
+ csvRows.slice(1).forEach(row=>{
+  const rowVilla=row[2]?.trim().replace(/^0+/,"");
+  if(villa && rowVilla!==villa)return;
 
-    const rowVilla = row[2]?.trim().replace(/^0+/,"");
-    if(villa && rowVilla !== villa) return;
+  for(let c=4;c<row.length;c+=5){
+   const work=row[c]?.trim();
+   const percent=row[c+1]?.trim();
+   const status=row[c+2]?.trim();
+   const contractor=row[c+3]?.trim();
 
-    for(let c = 4; c < row.length; c += 5){
+   if(!work && !status && !contractor)continue;
+   if(selectedContractor && contractor?.toLowerCase()!==selectedContractor)continue;
+   if(fWork.length && !fWork.includes(work?.toLowerCase()))continue;
+   if(fStatus.length && !fStatus.includes(status?.toLowerCase()))continue;
 
-      const work = row[c]?.trim();
-      const percent = row[c+1]?.trim();
-      const status = row[c+2]?.trim();
-      const contractor = row[c+3]?.trim();
-
-      // Skip empty records
-      if(!work && !status && !contractor) continue;
-
-      // Contractor filter (FIXED)
-      if(
-        selectedContractor &&
-        contractor?.toLowerCase() !== selectedContractor
-      ) continue;
-
-      // Work filter
-      if(
-        fWork.length &&
-        !fWork.includes(work?.toLowerCase())
-      ) continue;
-
-      // Status filter (FIXED: allow ALL matching)
-      if(
-        fStatus.length &&
-        !fStatus.includes(status?.toLowerCase())
-      ) continue;
-
-      results.push({
-        villa: rowVilla,
-        work,
-        percent,
-        contractor,
-        status
-      });
-    }
-  });
-
-  renderResults();
-}
-function renderResults(){
-  if(!results.length){
-    resultTable.style.display="none";
-    summaryBar.style.display="none";
-    return;
+   results.push({villa:rowVilla,work,percent,contractor,status});
   }
-
-  resultTable.style.display="table";
-  summaryBar.style.display="flex";
-
-  let open=0, closed=0, retained=0;
-  const villaSet = new Set();
-
-  results.forEach(r=>{
-    villaSet.add(r.villa);
-
-    if(r.status?.toLowerCase()==="open") open++;
-    if(r.status?.toLowerCase()==="closed") closed++;
-    if(r.status?.toLowerCase()==="retained") retained++;
-
-    tableBody.innerHTML += `
-      <tr>
-        <td>${r.villa}</td>
-        <td>${r.work || "-"}</td>
-        <td>${r.percent || "-"}</td>
-        <td>${r.contractor || "-"}</td>
-        <td>${r.status || "-"}</td>
-      </tr>
-    `;
-  });
-
-  summaryBar.innerHTML = `
-    <div>Total Villas: ${villaSet.size}</div>
-    <div>Open: ${open}</div>
-    <div>Closed: ${closed}</div>
-    <div>Retained: ${retained}</div>
-  `;
+ });
+ renderResults();
 }
 
-function render(){
- if(!results.length){resultTable.style.display="none";return;}
+/* ===== RENDER ===== */
+function renderResults(){
+ if(!results.length){
+  resultTable.style.display="none";
+  summaryBar.style.display="none";
+  return;
+ }
+
  resultTable.style.display="table";
- results.forEach(o=>{
+ summaryBar.style.display="flex";
+
+ let open=0,closed=0,retained=0;
+ const villaSet=new Set();
+
+ tableBody.innerHTML="";
+ results.forEach(r=>{
+  villaSet.add(r.villa);
+  if(r.status?.toLowerCase()==="open")open++;
+  if(r.status?.toLowerCase()==="closed")closed++;
+  if(r.status?.toLowerCase()==="retained")retained++;
+
   tableBody.innerHTML+=`
    <tr>
-    <td>${o.villa}</td>
-    <td>${o.work}</td>
-    <td>${o.percent}</td>
-    <td>${o.contractor}</td>
-    <td>${o.status}</td>
+    <td>${r.villa}</td>
+    <td>${r.work||"-"}</td>
+    <td>${r.percent||"-"}</td>
+    <td>${r.contractor||"-"}</td>
+    <td>${r.status||"-"}</td>
    </tr>`;
  });
+
+ summaryBar.innerHTML=`
+  <div>Total Villas: ${villaSet.size}</div>
+  <div>Open: ${open}</div>
+  <div>Closed: ${closed}</div>
+  <div>Retained: ${retained}</div>
+ `;
+}
+
+/* ===== VILLA DROPDOWN ===== */
+const villaInputEl=document.getElementById("villaInput");
+const villaListEl=document.getElementById("villaList");
+
+villaInputEl.addEventListener("focus",()=>renderVillaList());
+villaInputEl.addEventListener("input",()=>renderVillaList(villaInputEl.value));
+
+villaInputEl.addEventListener("keydown",e=>{
+ if(e.key==="Enter"){
+  e.preventDefault();
+  villaListEl.style.display="none";
+  searchData();
+ }
+});
+
+document.addEventListener("click",e=>{
+ if(!e.target.closest(".villa-wrapper")){
+  villaListEl.style.display="none";
+ }
+});
+
+function renderVillaList(filter=""){
+ villaListEl.innerHTML="";
+ const f=filter.trim();
+ const list=villaNumbers.filter(v=>v.startsWith(f));
+ if(!list.length){villaListEl.style.display="none";return;}
+
+ list.forEach(v=>{
+  const d=document.createElement("div");
+  d.className="villa-item";
+  d.textContent="Villa "+v;
+  d.onclick=()=>{
+   villaInputEl.value=v;
+   villaListEl.style.display="none";
+   searchData();
+  };
+  villaListEl.appendChild(d);
+ });
+ villaListEl.style.display="block";
+
+}
+const SEC_USER="admin",SEC_PASS="12345";
+function securityLogin(){
+ if(secUser.value===SEC_USER && secPass.value===SEC_PASS)
+  securityOverlay.style.display="none";
+ else secError.innerText="Invalid login";
 }
 
 </script>
-<a href="https://wa.me/+966504717535" target="_blank" 
-   style="
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: #25D366;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      z-index: 1000;
-      text-decoration: none;
-   " 
-   aria-label="Chat on WhatsApp"
-   title="Chat with us on WhatsApp">
-   <img src="whatsapp.png" alt="WhatsApp" style="width: 32px; height: 32px;">
+
+<!-- ===== WHATSAPP BUTTON ===== -->
+<a href="https://wa.me/+966504717535" target="_blank"
+ style="
+  position:fixed;bottom:20px;right:20px;
+  background:#25D366;border-radius:50%;
+  width:60px;height:60px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 8px rgba(0,0,0,.2);
+  z-index:1000;text-decoration:none;">
+ <img src="whatsapp.png" style="width:32px;height:32px">
 </a>
+
 </body>
-<script>
-window.addEventListener("load", function () {
-
-  /* ========== ENTER KEY SEARCH ========== */
-  const villaInput = document.getElementById("villaInput");
-  if (villaInput) {
-    villaInput.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        searchData();
-      }
-    });
-  }
-
-  /* ========== PAINT / PLASTER COMING SOON ========== */
-  const originalSearchData = searchData;
-
-  window.searchData = function () {
-
-    const works = [...document.querySelectorAll(".fWork:checked")]
-      .map(w => w.value.toLowerCase());
-
-    // If Paint OR Plaster OR both selected
-    if (works.includes("paint") || works.includes("plaster")) {
-      alert("🚧 Paint & Plaster Filter Function is Coming Soon");
-      return;
-    }
-
-    originalSearchData();
-  };
-
-});
-</script>
-
-
 </html>
-
