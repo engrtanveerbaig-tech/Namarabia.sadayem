@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Search by Villa / Subcontractor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="icon" type="image/png" href="sadayem.png">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<style>
+/* ===== BASE ===== */
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+    margin: 0;
+    padding: 0;
+    color: #333;
+    overflow-x: hidden;
+}
+img { height: 90px; }
+
+/* ===== NAVBAR ===== */
+.navbar {
+    background: linear-gradient(135deg, #394b5d, #2c3e50);
+    display: flex;
+    padding: 0 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    animation: slideDown 0.5s ease-out;
+}
+
+.navbar ul { list-style: none; display: flex; margin: 0; padding: 0; }
+.navbar ul li { position: relative; }
+.navbar ul li a {
+    display: block;
+    padding: 15px 20px;
+    color: #fff;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.2s;
+}
+.navbar ul li a:hover { background: rgba(255,255,255,0.1); transform: scale(1.05); }
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #49657f;
+    min-width: 180px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    z-index: 999;
+    animation: fadeIn 0.3s ease-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+}
+.navbar ul li:hover .dropdown { display: block; }
+.dropdown a { padding: 10px 15px; display: block; color: #fff; text-decoration: none; }
+.dropdown a:hover { background: rgba(255,255,255,0.1); }
+
+/* ===== MOBILE MENU ===== */
+.menu-btn { display: none; color: #fff; font-size: 26px; cursor: pointer; }
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    background: #394b5d;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 9999;
+    padding: 20px;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+}
+.sidebar a { color: #fff; display: block; padding: 12px 0; text-decoration: none; }
+.sidebar a:hover { background: rgba(255,255,255,0.1); }
+
+
+.chart-container {
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.3s;
+}
+.chart-container:hover { transform: translateY(-5px); }
+.chart-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1f2937;
+    text-align: center;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+    max-width: 1100px;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    padding: 25px 30px 35px;
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+/* ===== HEADER ===== */
+h2 {
+    text-align: center;
+    color: #fff;
+    background: linear-gradient(135deg, #1f2937, #374151);
+    padding: 15px;
+    border-radius: 50px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0% { box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+    50% { box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    100% { box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+}
+
+/* ===== FORM ===== */
+.form-box {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+.form-box input, select, button {
+    padding: 12px 18px;
+    border-radius: 30px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+.form-box input:focus, select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0,123,255,0.5);
+}
+button {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+button:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* ===== FILTER ===== */
+.advanced-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+    justify-content: center;
+}
+.advanced-filter label {
+    background: #f1f5f9;
+    padding: 10px 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.advanced-filter label:hover {
+    background: #e2e8f0;
+    transform: scale(1.05);
+}
+.advanced-filter input[type="checkbox"] {
+    margin: 0;
+}
+
+/* ===== APPLIED FILTERS ===== */
+.applied-filters {
+    background: #e3f2fd;
+    padding: 10px 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    display: none;
+    font-weight: 600;
+    animation: slideIn 0.5s ease-out;
+}
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+.applied-filters span {
+    margin-right: 10px;
+}
+
+/* ===== TABLE ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+th, td {
+    padding: 12px;
+    text-align: center;
+}
+th {
+    background: linear-gradient(135deg, #1f2937, #374151);
+    color: #fff;
+    font-weight: bold;
+}
+tr:nth-child(even) {
+    background: #f6f8fa;
+}
+tr:hover {
+    background: #e2e8f0;
+    transform: scale(1.01);
+    transition: all 0.2s;
+}
+
+/* ===== SUMMARY ===== */
+#summaryBar {
+    display: none;
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    display: flex;
+    gap: 20px;
+    justify-content: space-around;
+    font-weight: 600;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+/* ===== FOOTER ===== */
+footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: #666;
+}
+.prepared {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.prepared img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ===== LOADING ===== */
+.loading {
+    display: none;
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: #666;
+}
+.loading.show { display: block; }
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+    .navbar ul { display: none; }
+    .menu-btn { display: block; }
+    .charts-section {
+        width: calc(100% - 20px);
+        margin: 10px auto;
+        padding: 10px;
+    }
+    .form-box { flex-direction: column; align-items: center; }
+    .advanced-filter { justify-content: center; }
+    footer { flex-direction: column; text-align: center; }
+}
+.close-btn{
+    color:#fff;
+    font-size:22px;
+    cursor:pointer;
+    display:block;
+    text-align:right;
+    margin-bottom:15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<img src="nam.png">
+
+<nav class="navbar">
+    <span class="menu-btn" onclick="toggleMenu()">☰</span>
+    <ul>
+        <li><a href="home.html"><i class="fas fa-home"></i> Home</a></li>
+        <li>
+            <a href="#"><i class="fas fa-search"></i> Search by ▾</a>
+            <div class="dropdown">
+                <a href="subcontractor.html"><i class="fas fa-building"></i> Villa</a>
+                <a href="Sadayem.html"><i class="fas fa-tools"></i> Villa / Subcontractor</a>
+            </div>
+        </li>
+        <li><a href="about.html"><i class="fas fa-info-circle"></i> About</a></li>
+        <li><a href="mailto:mrtanveer2017@gmail.com"><i class="fas fa-envelope"></i> Contact</a></li>
+    </ul>
+</nav>
+
+<div class="sidebar" id="sidebar">
+    <span class="close-btn" onclick="toggleMenu()">✕</span>
+
+    <a href="home.html"><i class="fas fa-home"></i> Home</a>
+    <a href="subcontractor.html"><i class="fas fa-building"></i> Villa</a>
+    <a href="Sadayem.html"><i class="fas fa-tools"></i> Villa / Subcontractor</a>
+    <a href="about.html"><i class="fas fa-info-circle"></i> About</a>
+</div>
+
+
+<div class="container">
+
+    <h2><i class="fas fa-search"></i> Search by Villa / Contractor</h2>
+
+    <div id="summaryBar"></div>
+
+    <div class="applied-filters" id="appliedFilters"></div>
+
+    <div class="form-box">
+        <input id="villaInput" placeholder="Villa No" type="text">
+        <input id="contractorInput" placeholder="Search Contractor" type="text">
+        <select id="zoneSelect"><option value="">All Zones</option></select>
+        <button onclick="searchData()"><i class="fas fa-search"></i> Search</button>
+    </div>
+
+    <div class="advanced-filter" id="workFilters"></div>
+
+    <div class="loading" id="loading">Loading data...</div>
+
+    <table id="resultTable" style="display:none">
+        <thead>
+            <tr>
+                <th><i class="fas fa-home"></i> Villa</th>
+                <th><i class="fas fa-wrench"></i> Work</th>
+                <th><i class="fas fa-percentage"></i> %</th>
+                <th><i class="fas fa-user-tie"></i> Contractor</th>
+                <th><i class="fas fa-check-circle"></i> Status</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <footer>
+        <div>© 2026 Eng. Tanveer Ahmad</div>
+        <div><i class="fas fa-envelope"></i> Contact: mrtanveer2017@gmail.com</div>
+        <div class="prepared">
+            <span>Designed by</span>
+            <img src="mypic.png" alt="Designer">
+        </div>
+    </footer>
+
+</div>
+
+<!-- WhatsApp -->
+<a href="https://wa.me/+966504717535" target="_blank"
+   style="position:fixed;bottom:20px;right:20px;background:#25D366;
+   width:60px;height:60px;border-radius:50%;
+   display:flex;align-items:center;justify-content:center;
+   box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: transform 0.3s;">
+   <img src="whatsapp.png" style="width:32px" alt="WhatsApp">
+</a>
+
+<script>
+let csvRows = [], results = [];
+let statusChart, workChart, progressChart;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const loading = document.getElementById('loading');
+    loading.classList.add('show');
+    fetch("plaster_work.csv")
+        .then(r => {
+            if (!r.ok) throw new Error('CSV file not found');
+            return r.text();
+        })
+        .then(t => {
+            csvRows = t.trim().split("\n").map(r => r.split(","));
+            initFilters();
+            loading.classList.remove('show');
+        })
+        .catch(e => {
+            console.error('Error loading CSV:', e);
+            loading.innerHTML = 'Error loading data. Please check the CSV file.';
+        });
+});
+
+function initFilters() {
+    const workSet = new Set(), zoneSet = new Set();
+    csvRows.slice(1).forEach(r => {
+        zoneSet.add(r[0]);
+        for (let c = 4; c < r.length; c += 5)
+            if (r[c]) workSet.add(r[c]);
+    });
+    zoneSet.forEach(z => zoneSelect.add(new Option(z, z)));
+    workSet.forEach(w => {
+        workFilters.innerHTML += `<label><input type="checkbox" class="fWork" value="${w}"> ${w}</label>`;
+    });
+    ["Open", "Closed", "Retained"].forEach(s => {
+        workFilters.innerHTML += `<label><input type="checkbox" class="fStatus" value="${s}"> ${s}</label>`;
+    });
+}
+
+function searchData() {
+    results = [];
+    tableBody.innerHTML = "";
+    const villa = villaInput.value.trim();
+    const con = contractorInput.value.toLowerCase();
+    const zone = zoneSelect.value;
+
+    const fW = [...document.querySelectorAll(".fWork:checked")].map(e => e.value);
+    const fS = [...document.querySelectorAll(".fStatus:checked")].map(e => e.value);
+
+    csvRows.slice(1).forEach(r => {
+        if (zone && r[0] !== zone) return;
+        if (villa && r[2] !== villa) return;
+
+        for (let c = 4; c < r.length; c += 5) {
+            const work = r[c], per = r[c + 1], st = r[c + 2], co = r[c + 3];
+            if (con && !co.toLowerCase().includes(con)) continue;
+            if (fW.length && !fW.includes(work)) continue;
+            if (fS.length && !fS.includes(st)) continue;
+            results.push({ villa: r[2], work, per: parseFloat(per) || 0, co, st });
+        }
+    });
+    render();
+}
+function render(){
+    if(!results.length){
+        resultTable.style.display="none";
+        summaryBar.style.display="none";
+        return;
+    }
+
+    resultTable.style.display="table";
+    summaryBar.style.display="flex";
+
+    let open=0, closed=0, ret=0;
+    tableBody.innerHTML="";
+
+    results.forEach(r=>{
+        if(r.st==="Open") open++;
+        if(r.st==="Closed") closed++;
+        if(r.st==="Retained") ret++;
+
+        tableBody.innerHTML += `
+            <tr>
+                <td>${r.villa}</td>
+                <td>${r.work}</td>
+                <td>${r.per}</td>
+                <td>${r.co}</td>
+                <td>${r.st}</td>
+            </tr>`;
+    });
+
+    summaryBar.innerHTML =
+        `<div>Open: ${open}</div>
+         <div>Closed: ${closed}</div>
+         <div>Retained: ${ret}</div>`;
+}
+
+function toggleMenu() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.style.transform =
+        sidebar.style.transform === "translateX(0%)"
+        ? "translateX(-100%)"
+        : "translateX(0%)";
+}
+</script>
+</body>
+</html>
